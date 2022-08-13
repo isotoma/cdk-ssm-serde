@@ -1,7 +1,8 @@
 import { Template } from 'aws-cdk-lib/assertions';
 import { Stack } from 'aws-cdk-lib/core';
 import * as route53 from 'aws-cdk-lib/aws-route53';
-import { putHostedZone, getHostedZone } from '../';
+import * as eks from 'aws-cdk-lib/aws-eks';
+import * as ssmSerde from '../';
 
 test('put hosted zone', () => {
     const stack = new Stack();
@@ -10,7 +11,7 @@ test('put hosted zone', () => {
         zoneName: 'example.com',
     });
 
-    putHostedZone(stack, {
+    ssmSerde.putHostedZone(stack, {
         parameterPrefix: '/myhostedzone',
         resource: hostedZone,
     });
@@ -29,7 +30,7 @@ test('put hosted zone', () => {
 test('get hosted zone', () => {
     const stack = new Stack();
 
-    const hostedZone = getHostedZone(stack, 'HostedZone', {
+    const hostedZone = ssmSerde.getHostedZone(stack, 'HostedZone', {
         parameterPrefix: '/myhostedzone',
     });
 
@@ -43,5 +44,40 @@ test('get hosted zone', () => {
     template.hasResourceProperties('AWS::Route53::RecordSet', {
         Type: 'CNAME',
         ResourceRecords: ['foo.example.com'],
+    });
+});
+
+test('put eks cluster', () => {
+    const stack = new Stack();
+
+    const cluster = new eks.Cluster(stack, 'Cluster', {
+        version: eks.KubernetesVersion.V1_20,
+    });
+
+    ssmSerde.putEksCluster(stack, {
+        parameterPrefix: '/mycluster',
+        resource: cluster,
+    });
+
+    const template = Template.fromStack(stack);
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+        Type: 'String',
+        Name: '/mycluster/clusterName',
+    });
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+        Type: 'String',
+        Name: '/mycluster/kubectlRoleArn',
+    });
+    template.hasResourceProperties('AWS::SSM::Parameter', {
+        Type: 'String',
+        Name: '/mycluster/openIdConnectProviderArn',
+    });
+});
+
+test('get eks cluster', () => {
+    const stack = new Stack();
+
+    ssmSerde.getEksCluster(stack, 'Cluster', {
+        parameterPrefix: '/mycluster',
     });
 });
