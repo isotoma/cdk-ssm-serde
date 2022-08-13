@@ -1,5 +1,11 @@
 ### Changelog
 
+#### [0.2.0](https://github.com/isotoma/cdk-ssm-serde/compare/0.1.0...0.2.0)
+
+> 13 August 2022
+
+- EKS cluster [`#2`](https://github.com/isotoma/cdk-ssm-serde/pull/2)
+
 #### 0.1.0
 
 > 13 August 2022
