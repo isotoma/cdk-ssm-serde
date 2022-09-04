@@ -1,5 +1,11 @@
 ### Changelog
 
+#### [0.3.0](https://github.com/isotoma/cdk-ssm-serde/compare/0.2.0...0.3.0)
+
+> 4 September 2022
+
+- Consistent API [`#5`](https://github.com/isotoma/cdk-ssm-serde/pull/5)
+
 #### [0.2.0](https://github.com/isotoma/cdk-ssm-serde/compare/0.1.0...0.2.0)
 
 > 13 August 2022
