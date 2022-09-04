@@ -21,6 +21,6 @@
     "types": ["node", "jest"]
   },
   "include": [
-    "index.ts"
+    "lib/"
   ]
 }
